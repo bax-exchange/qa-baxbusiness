@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Playwright output
+playwright-report/
+test-results/
+
+# Auth state (contains session tokens)
+auth/storage.json
+
+# Sensitive environment variables
+.env
+
+# Claude internal files
+.claude/
+.mcp.json
+.playwright-mcp/
+
+# Generated files
+reporte-tests.pdf
+generate-pdf.js
