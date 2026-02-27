@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { validateClabe } from 'clabe-js';
 import { AccionesDashboardPage } from '../../pages/AccionesDashboardPage';
 
 test.describe('Dashboard - Acciones de Home', () => {
@@ -63,6 +64,56 @@ test.describe('Dashboard - Acciones de Home', () => {
     test('al seleccionar Pesos Mexicanos muestra el beneficiario BAX', async ({ page }) => {
       await accionesPage.ingresarPesosMexicanos.click();
       await expect(page.getByText('BAX BLOCKCHAIN SERVICES', { exact: false })).toBeVisible();
+    });
+
+    // ─── INGRESAR > PESOS MEXICANOS — detalle ──────────────────────────────
+
+    test.describe('Pesos Mexicanos — detalle CLABE', () => {
+      test.beforeEach(async () => {
+        await accionesPage.ingresarPesosMexicanos.click();
+        await accionesPage.clabeSection.waitFor({ state: 'visible' });
+      });
+
+      // A. CLABE válida
+      test('A — la CLABE mostrada es un número de CLABE válido', async () => {
+        const clabeText = (await accionesPage.clabeSection.textContent()) ?? '';
+        const isValid = validateClabe(clabeText.trim());
+        expect(isValid, `CLABE inválida: ${clabeText.trim()}`).toBe(true);
+      });
+
+      // B. Todos los campos completos
+      test('B — muestra el título "Compra MEXAS depositando Pesos Mexicanos"', async () => {
+        await expect(accionesPage.pesosTitulo).toBeVisible();
+      });
+
+      test('B — muestra la etiqueta "Cuenta CLABE" con valor no vacío', async () => {
+        await expect(accionesPage.cuentaClabeLabel).toBeVisible();
+        const clabe = (await accionesPage.clabeSection.textContent()) ?? '';
+        expect(clabe.trim()).not.toBe('');
+      });
+
+      test('B — muestra el Beneficiario completo', async () => {
+        await expect(accionesPage.beneficiarioLabel).toBeVisible();
+        await expect(accionesPage.beneficiarioValue).toBeVisible();
+        const value = (await accionesPage.beneficiarioValue.textContent()) ?? '';
+        expect(value.trim()).not.toBe('');
+      });
+
+      test('B — muestra el Banco con valor no vacío', async () => {
+        await expect(accionesPage.bancoLabel).toBeVisible();
+        await expect(accionesPage.bancoValue).toBeVisible();
+        const value = (await accionesPage.bancoValue.textContent()) ?? '';
+        expect(value.trim()).not.toBe('');
+      });
+
+      // C. Botón copiar
+      test('C — el botón "Copiar dirección" copia la CLABE al portapapeles', async ({ page, context }) => {
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+        await accionesPage.copiarDireccionButton.click();
+        const copied = await page.evaluate(() => navigator.clipboard.readText());
+        const clabe = (await accionesPage.clabeSection.textContent()) ?? '';
+        expect(copied).toBe(clabe.trim());
+      });
     });
   });
 

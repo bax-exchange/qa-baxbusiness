@@ -14,7 +14,16 @@ export class AccionesDashboardPage {
   readonly ingresarCriptoLabel: Locator;
   readonly ingresarPesosMexicanos: Locator;
   readonly ingresarDolares: Locator;
+
+  // Ingresar > Pesos Mexicanos — detalle CLABE
   readonly clabeSection: Locator;
+  readonly pesosTitulo: Locator;
+  readonly cuentaClabeLabel: Locator;
+  readonly beneficiarioLabel: Locator;
+  readonly beneficiarioValue: Locator;
+  readonly bancoLabel: Locator;
+  readonly bancoValue: Locator;
+  readonly copiarDireccionButton: Locator;
 
   // Drawer Retirar
   readonly retirarTitle: Locator;
@@ -49,6 +58,13 @@ export class AccionesDashboardPage {
     this.ingresarPesosMexicanos = page.getByRole('button', { name: /Pesos Mexicanos/i }).first();
     this.ingresarDolares = page.getByRole('button', { name: /Dólares/i }).first();
     this.clabeSection = page.getByText('646180537900000009');
+    this.pesosTitulo = page.getByText('Compra MEXAS depositando Pesos Mexicanos');
+    this.cuentaClabeLabel = page.getByText('Cuenta CLABE');
+    this.beneficiarioLabel = page.getByText('Beneficiario');
+    this.beneficiarioValue = page.getByText('BAX BLOCKCHAIN SERVICES SA DE CV');
+    this.bancoLabel = page.getByText('Banco');
+    this.bancoValue = page.getByText('STP');
+    this.copiarDireccionButton = page.getByRole('button', { name: 'Copiar dirección' });
 
     // Drawer Retirar
     this.retirarTitle = page.getByText('Selecciona cómo quieres retirar', { exact: false });
