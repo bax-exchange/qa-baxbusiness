@@ -32,12 +32,12 @@ async function globalSetup(config: FullConfig) {
   await page.waitForURL('**/dashboard');
 
   // Esperar que la empresa esté seleccionada (balance visible = empresa cargada)
-  await page.getByText('Balance en', { exact: false }).waitFor({ state: 'visible', timeout: 15000 });
+  await page.getByText('Balance en', { exact: false }).waitFor({ state: 'visible', timeout: 8000 });
   // Esperar que la empresa NO sea "Selecciona una compañía"
   await page.waitForFunction(() => {
     const els = Array.from(document.querySelectorAll('p'));
     return els.some(el => el.textContent?.includes('BAX') || el.textContent?.includes('Bax') || el.textContent?.includes('MIKE'));
-  }, { timeout: 10000 });
+  }, { timeout: 6000 });
 
   // Guardar el estado de autenticación con empresa ya cargada
   await page.context().storageState({ path: 'auth/storage.json' });

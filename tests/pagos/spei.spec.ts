@@ -30,7 +30,11 @@ test.describe('Pagos SPEI', () => {
   });
 
   test('muestra estado vacío O datos en la tabla de pagos realizados', async ({ page }) => {
-    // La cuenta puede tener pagos o estar vacía — ambos son estados válidos
+    // Esperar que la página cargue (estado vacío o tabla con datos)
+    await Promise.race([
+      speiPage.emptyStateMessage.waitFor({ state: 'visible', timeout: 10000 }),
+      speiPage.table.waitFor({ state: 'visible', timeout: 10000 }),
+    ]).catch(() => {});
     const tieneEstadoVacio = await speiPage.emptyStateMessage.isVisible();
     const tieneDatos = await speiPage.table.isVisible();
     expect(tieneEstadoVacio || tieneDatos).toBe(true);

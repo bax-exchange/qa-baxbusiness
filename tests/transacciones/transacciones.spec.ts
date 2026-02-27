@@ -48,6 +48,8 @@ test.describe('Transacciones', () => {
   });
 
   test('muestra filas de transacciones en la tabla', async () => {
+    // Esperar que aparezca la primera fila de datos (índice 1 = primera fila tras el header)
+    await transaccionesPage.tableRows.nth(1).waitFor({ state: 'visible' });
     const rowCount = await transaccionesPage.getRowCount();
     expect(rowCount).toBeGreaterThan(0);
   });

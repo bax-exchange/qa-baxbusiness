@@ -18,7 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : 2,
 
   globalSetup: './global-setup.ts',
 
@@ -32,7 +32,7 @@ export default defineConfig({
     storageState: 'auth/storage.json',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'on-first-retry',
+    video: process.env.CI ? 'retain-on-failure' : 'off',
     locale: 'es-AR',
   },
 

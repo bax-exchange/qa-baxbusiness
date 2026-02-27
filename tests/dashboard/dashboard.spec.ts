@@ -31,7 +31,8 @@ test.describe('Dashboard', () => {
 
   test('muestra la sección "Últimas Transacciones" con tabla', async ({ page }) => {
     await expect(dashboardPage.ultimasTransaccionesSection).toBeVisible();
-    await expect(page.getByRole('table')).toBeVisible();
+    // Hay 2 tablas en la página; tomamos la que contiene columnas de transacciones
+    await expect(page.getByRole('table').last()).toBeVisible({ timeout: 10000 });
   });
 
   test('la tabla de últimas transacciones tiene las columnas correctas', async ({ page }) => {

@@ -29,31 +29,32 @@ test.describe('Clientes', () => {
   });
 
   test('el contador de Activos muestra un número positivo', async ({ page }) => {
-    // El bloque tiene: "Activos\n45" — tomamos el número del contenedor completo
+    // El bloque tiene: "Activos\n45" — esperamos que cargue el número y sea > 0
     const activosContainer = page.locator('p', { hasText: /^Activos$/ }).locator('..');
-    const fullText = await activosContainer.textContent();
-    const match = fullText!.match(/(\d+)/);
-    expect(match).not.toBeNull();
-    expect(Number(match![1])).toBeGreaterThan(0);
+    await expect(async () => {
+      const fullText = await activosContainer.textContent() ?? '';
+      const match = fullText.match(/(\d+)/);
+      expect(match).not.toBeNull();
+      expect(Number(match![1])).toBeGreaterThan(0);
+    }).toPass({ timeout: 10000 });
   });
 
   test('la tabla tiene las columnas correctas', async ({ page }) => {
-    // Esperar a que la tabla cargue completamente
-    await page.waitForLoadState('networkidle');
+    await clientesPage.table.waitFor({ state: 'visible' });
     const columnas = ['Correo', 'Nombre', 'Estado', 'Saldo', 'Tarjetas', 'Proveedor'];
     for (const columna of columnas) {
       await expect(page.getByRole('columnheader', { name: columna })).toBeVisible();
     }
   });
 
-  test('muestra filas de clientes en la tabla', async ({ page }) => {
-    await page.waitForLoadState('networkidle');
+  test('muestra filas de clientes en la tabla', async () => {
+    await clientesPage.table.waitFor({ state: 'visible' });
     const rowCount = await clientesPage.getRowCount();
     expect(rowCount).toBeGreaterThan(0);
   });
 
-  test('muestra el botón "Cargar más"', async ({ page }) => {
-    await page.waitForLoadState('networkidle');
+  test('muestra el botón "Cargar más"', async () => {
+    await clientesPage.table.waitFor({ state: 'visible' });
     await expect(clientesPage.cargarMasButton).toBeVisible();
     await expect(clientesPage.cargarMasButton).toBeEnabled();
   });

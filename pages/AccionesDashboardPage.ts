@@ -86,7 +86,7 @@ export class AccionesDashboardPage {
   }
 
   async waitForDashboard() {
-    await this.page.getByText('Balance en', { exact: false }).first().waitFor({ state: 'visible', timeout: 15000 });
+    await this.page.getByText('Balance en', { exact: false }).first().waitFor({ state: 'visible', timeout: 10000 });
   }
 
   async openIngresar() {
